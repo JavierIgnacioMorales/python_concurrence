@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 import time
+import multiprocessing
 
 #Crea la ventana principal
 main_window = tk.Tk()
@@ -25,21 +26,34 @@ def crearAnimacion(a, b, char):
     texto=""
     retardo: float=0.25
     for i in range(0,35):
-        time.sleep(retardo + (i * 0.5))
+        time.sleep(retardo)
         texto += char
         mylabel.config(text = texto)
         main_window.update_idletasks()
         main_window.update()
 
-#Ejecuta tres animaciones
-crearAnimacion(10,10, 'X')
-crearAnimacion(10,30, 'Y')
-crearAnimacion(10,50, 'Z')
 
 
 # Mantener las siguientes líneas siempre al final del script y en el mismo orden.
 #Coloca la opcion "Salir"
 opcionFinalizar()
 
-#Bucle principal de la ventana
-main_window.mainloop()
+
+
+if __name__ == '__main__':
+
+
+    #Crea los procesos
+    worker_a = multiprocessing.Process(target=crearAnimacion, args=(10, 10, 'X'))
+    worker_b = multiprocessing.Process(target=crearAnimacion, args=(10, 30, 'Y'))
+    worker_c = multiprocessing.Process(target=crearAnimacion, args=(10, 50, 'Z'))
+
+
+    #Ejecuta tres animaciones
+    worker_a.start()
+    worker_b.start()
+    worker_c.start()
+
+
+    #Bucle principal de la ventana
+    main_window.mainloop()
